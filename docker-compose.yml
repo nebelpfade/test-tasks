@@ -1,0 +1,8 @@
+version: '2'
+services:
+ task1:
+  build: .
+  environment:
+   - GitURL=https://github.com/nebelpfade/testrepo.git
+  volumes:
+   - /tmp/code:/code

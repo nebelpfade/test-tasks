@@ -1,0 +1,34 @@
+#!/bin/sh
+
+# global variables for result and errors
+errnum=""
+gitRepo='/code'
+lcErrURLNotSet='ERROR: Env variable "GitURL" was not set and any additional cmd arg were not provided'
+lcErrDirNotEmpry='ERROR: Destination directory is not empty'
+
+# Panic if dest directory is not empty
+if [ "$(ls -A ${gitRepo})" ];then
+  echo "${lcErrDirNotEmpry}"
+  errnum="1"
+  exit "${errnum}"
+fi
+# Here check if additional parameters passed via cmd line
+if [ "$#" == "0" ];then
+# If no any external args check GitURL env variable
+  if [ -z "${GitURL}" ];then
+    # Panic due to git url missed
+    echo "${lcErrURLNotSet}"
+    errnum="1"
+  else
+    # Do git clone from env var
+    git clone "${GitURL}" "${gitRepo}"/. 2>&1
+    errnum=$?
+  fi
+else
+  # Do git clone from docker run args
+  git clone "$@" "${gitRepo}"/. 2>&1
+  errnum=$?
+fi
+
+[ "${errnum}" != "0" ] && exit "${errnum}"
+exit 0
