@@ -1,0 +1,11 @@
+#!/bin/sh
+
+#Run puppet to install and run apps
+puppet apply /task2.pp 2>&1
+#On any errors - exit and stop container
+[ "$?" != "0" ] && exit 1
+
+#If no any errors do sleep foreve for keeping container running
+while true; do
+  sleep 600
+done
